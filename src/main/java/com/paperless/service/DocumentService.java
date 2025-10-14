@@ -23,7 +23,7 @@ public class DocumentService {
         documentRepository.save(entity);
     }
 
-    public Document getDocumentById(java.util.UUID id) throws SQLException {
+    public Document getDocumentById(Long id) throws SQLException {
         log.info("Get document by ID request: {}", id);
         var entity = documentRepository.findById(id)
                 .orElseThrow(() -> new SQLException("Document not found with id: " + id));

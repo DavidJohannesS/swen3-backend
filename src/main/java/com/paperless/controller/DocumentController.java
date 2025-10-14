@@ -5,7 +5,9 @@ import com.paperless.service.DocumentMapper;
 import com.paperless.service.DocumentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,9 +29,13 @@ public class DocumentController {
     }
 
     @GetMapping("/{id}")
-    public Document getById(@PathVariable UUID id) throws SQLException {
+    public Document getById(@PathVariable Long id) throws SQLException {
+        var doc = documentService.getDocumentById(id);
         log.info("GET /api/documents/{id}", id);
-        return documentService.getDocumentById(id);
+        if (doc == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found with id: " + id);
+        }
+        return doc;
     }
 
 

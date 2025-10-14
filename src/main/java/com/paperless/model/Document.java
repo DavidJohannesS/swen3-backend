@@ -12,13 +12,11 @@ import java.util.UUID;
 @Builder
 public class Document {
     @Id
-    @GeneratedValue
-    private UUID id;
+    private Long id;
 
     private String title;
 
     private String description;
 
     private Instant createdAt;
-
 }

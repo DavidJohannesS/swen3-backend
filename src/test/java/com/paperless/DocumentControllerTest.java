@@ -5,33 +5,29 @@ import com.paperless.model.Document;
 import com.paperless.repository.DocumentEntity;
 import com.paperless.service.DocumentMapper;
 import com.paperless.service.DocumentService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.SQLException;
 import java.time.Instant;
-import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.when;
 
-@WebMvcTest(DocumentController.class)
+@ExtendWith(MockitoExtension.class)
 public class DocumentControllerTest {
-    @Autowired
-    MockMvc mockMvc;
 
     @Mock
     private DocumentService documentService;
-
-    @Mock
-    private DocumentMapper documentMapper;
 
     @InjectMocks
     private DocumentController documentController;
@@ -43,41 +39,55 @@ public class DocumentControllerTest {
     void setUp() {
 
         sampleDto = Document.builder()
-                .id(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+                .id(1L)
                 .title("Sample Document")
                 .description("This is a sample document.")
                 .createdAt(Instant.parse("2023-10-01T12:00:00Z"))
                 .build();
 
         sampleEntity = new DocumentEntity();
-        sampleEntity.setId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
         sampleEntity.setTitle("Sample Document");
         sampleEntity.setDescription("This is a sample document.");
         sampleEntity.setCreatedAt(Instant.parse("2023-10-01T12:00:00Z"));
     }
 
     @Test
-    void create_returns_201_and_body() throws Exception {
-        // Arrange
-        var document = sampleDto;
+    void getDocumentById_ReturnsDocument() throws SQLException {
+        Long id = 1L;
 
-        // Act & Assert
-        mockMvc.perform(post("/api/documents")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                    {
-                        "id": "123e4567-e89b-12d3-a456-426614174000",
-                        "title": "Sample Document",
-                        "description": "This is a sample document.",
-                        "createdAt": "2023-10-01T12:00:00Z"
-                    }
-                """))
-                .andExpect(status().isCreated());
+        when(documentService.getDocumentById(anyLong())).thenReturn(sampleDto);
 
-        verify(documentService).create(document);
+        Document result = documentController.getById(id);
+
+        assertThat(result).isEqualTo(sampleDto);
+        verify(documentService).getDocumentById(id);
     }
 
+    @Test
+    void getDocumentById_ReturnsNotFound() throws SQLException {
+        Long id = 999L;
+        when(documentService.getDocumentById(anyLong())).thenReturn(null);
 
+        assertThatThrownBy(() -> documentController.getById(id))
+                .isInstanceOf((ResponseStatusException.class))
+                .satisfies(ex -> {
+                    var rse = (ResponseStatusException) ex;
+                    assertThat(rse.getStatusCode().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
+                });
+        verify(documentService).getDocumentById(anyLong());
+    }
 
+    @Test
+    void createDocument_ReturnsCreatedDocument() throws SQLException {
+        Document request = Document.builder()
+                .title("New Doc")
+                .description("Desc")
+                .createdAt(Instant.parse("2023-10-01T12:00:00Z"))
+                .build();
+
+        documentController.createDocument(request);
+
+        verify(documentService).create(request);
+    }
 
 }
