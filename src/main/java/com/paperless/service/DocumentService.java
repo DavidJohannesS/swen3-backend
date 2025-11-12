@@ -57,9 +57,9 @@ public class DocumentService {
     public List<Document> getAllDocuments(){
         try{
             log.info("Get all documents request");
-            return documentRepository.findAll()
+            List<Document> list = documentRepository.findAll()
                     .stream()
-                    .map(entity -> {)
+                    .map(entity -> {
                         try {
                             return documentMapper.toDto(entity);
                         } catch (Exception e) {
@@ -68,6 +68,7 @@ public class DocumentService {
                         }
                     })
                     .toList();
+            return list;
         }catch (Exception e){
             log.error("Error retrieving documents: {}", e.getMessage());
             throw new RuntimeException("Failed to retrieve documents", e);
