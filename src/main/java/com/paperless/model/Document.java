@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -16,7 +17,16 @@ public class Document {
 
     private String title;
 
-    private String description;
+    private String originalFileName;
 
-    private Instant createdAt;
+    private String storagePath;
+
+    private Instant uploadDate;
+
+    private DocumentStatus status;
+
+    private String mimeType;
+
+    private Long sizeInBytes;
 }
+

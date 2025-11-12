@@ -1,5 +1,6 @@
 package com.paperless.repository;
 
+import com.paperless.model.DocumentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,9 +21,21 @@ public class DocumentEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 2000)
-    private String description;
+    @Column(nullable = false)
+    private String originalFileName;
 
-    @Column(nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    @Column(nullable = false)
+    private String storagePath;
+
+    @Column(nullable = false)
+    private Instant uploadDate;
+
+    @Column(nullable = false)
+    private DocumentStatus status;
+
+    @Column(nullable = false)
+    private String mimeType;
+
+    @Column(nullable = false)
+    private Long sizeInBytes;
 }
