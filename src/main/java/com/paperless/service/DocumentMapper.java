@@ -17,8 +17,12 @@ public class DocumentMapper extends AbstractMapper<DocumentEntity, Document> {
         return Document.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
-                .description(entity.getDescription())
-                .createdAt(entity.getCreatedAt())
+                .originalFileName(entity.getOriginalFileName())
+                .storagePath(entity.getStoragePath())
+                .uploadDate(entity.getUploadDate())
+                .status(entity.getStatus())
+                .mimeType(entity.getMimeType())
+                .sizeInBytes(entity.getSizeInBytes())
                 .build();
     }
 
@@ -30,8 +34,12 @@ public class DocumentMapper extends AbstractMapper<DocumentEntity, Document> {
         return DocumentEntity.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())
-                .description(dto.getDescription())
-                .createdAt(dto.getCreatedAt())
+                .originalFileName(dto.getOriginalFileName())
+                .storagePath(dto.getStoragePath())
+                .uploadDate(dto.getUploadDate())
+                .status(dto.getStatus())
+                .mimeType(dto.getMimeType())
+                .sizeInBytes(dto.getSizeInBytes())
                 .build();
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,13 +22,13 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @PostMapping
-    public void createDocument(@RequestBody Document document) throws SQLException {
+    public Document saveDocument(@RequestBody Document document){
         log.info("POST /api/documents called with document: {}", document);
-        documentService.create(document);
+        return documentService.saveDocument(document);
     }
 
     @GetMapping("/{id}")
-    public Document getById(@PathVariable Long id) throws SQLException {
+    public Document getById(@PathVariable Long id){
         var doc = documentService.getDocumentById(id);
         log.info("GET /api/documents/{id}", id);
         if (doc == null) {
@@ -38,5 +37,9 @@ public class DocumentController {
         return doc;
     }
 
-
+    @GetMapping
+    public List<Document> getAllDocuments(){
+        log.info("GET /api/documents called");
+        return documentService.getAllDocuments();
+    }
 }
