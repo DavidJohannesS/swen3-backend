@@ -37,6 +37,11 @@ public class DocumentController {
         return doc;
     }
 
+    @GetMapping("/ping")
+    public String pingPong(){
+        log.info("GET /api/documents/pingPong called");
+        return "Pong";
+    }
     @GetMapping
     public List<Document> getAllDocuments(){
         log.info("GET /api/documents called");
