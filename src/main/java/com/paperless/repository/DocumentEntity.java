@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name ="documents")
+@Table(name ="document")
 public class DocumentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,8 @@
 package com.paperless.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paperless.model.Document;
+import com.paperless.config.KafkaProducer;
 import com.paperless.model.DocumentStatus;
 import com.paperless.repository.DocumentEntity;
 import com.paperless.repository.DocumentRepository;
@@ -22,7 +24,9 @@ import static java.util.UUID.randomUUID;
 public class DocumentService {
     private final DocumentRepository documentRepository;
     private final DocumentMapper documentMapper;
+    private final KafkaProducer kafkaProducer;
     private final StorageService storageService;
+    private final ObjectMapper objectMapper; 
 
     public Document saveDocument(MultipartFile file, String title) {
         try {
@@ -48,8 +52,12 @@ public class DocumentService {
             // Persist in DB
             var entity = documentMapper.toEntity(doc);
             var savedEntity = documentRepository.save(entity);
+            Document savedDoc = documentMapper.toDto(savedEntity);
 
-            return documentMapper.toDto(savedEntity);
+            String payload = objectMapper.writeValueAsString(savedDoc);
+            kafkaProducer.sendToOcrQueue(payload);
+
+            return savedDoc;
         } catch (Exception e) {
             log.error("Error saving document: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to save document", e);
