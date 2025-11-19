@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @PostMapping
-    public Document saveDocument(@RequestBody Document document){
-        log.info("POST /api/documents called with document: {}", document);
-        return documentService.saveDocument(document);
+    public Document uploadDocument(@RequestParam("file") MultipartFile file,
+                                   @RequestParam("title") String title) {
+        return documentService.saveDocument(file, title);
     }
 
     @GetMapping("/{id}")
