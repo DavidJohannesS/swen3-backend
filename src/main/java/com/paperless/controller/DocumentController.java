@@ -16,8 +16,6 @@ import java.util.UUID;
 @RequestMapping("/api/documents")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
-
 public class DocumentController {
     private final DocumentService documentService;
 
