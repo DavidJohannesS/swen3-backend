@@ -23,6 +23,7 @@ public class DocumentMapper extends AbstractMapper<DocumentEntity, Document> {
                 .status(entity.getStatus())
                 .mimeType(entity.getMimeType())
                 .sizeInBytes(entity.getSizeInBytes())
+                .accessCounter(entity.getAccessCounter())
                 .build();
     }
 
@@ -40,6 +41,7 @@ public class DocumentMapper extends AbstractMapper<DocumentEntity, Document> {
                 .status(dto.getStatus())
                 .mimeType(dto.getMimeType())
                 .sizeInBytes(dto.getSizeInBytes())
+                .accessCounter(dto.getAccessCounter())
                 .build();
     }
 }

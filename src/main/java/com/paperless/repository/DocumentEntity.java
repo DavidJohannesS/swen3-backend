@@ -38,4 +38,7 @@ public class DocumentEntity {
 
     @Column(nullable = false)
     private Long sizeInBytes;
+
+    @Column(nullable = false)
+    private int accessCounter;
 }
