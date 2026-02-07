@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,11 @@ public class ElasticSearchQueryService {
 
     private final WebClient webClient;
 
-    public ElasticSearchQueryService(WebClient.Builder builder) {
+    public ElasticSearchQueryService(WebClient.Builder builder,
+            @Value("${paperless.elasticsearch.url}") String elasticUrl
+    ) {
         this.webClient = builder
-                .baseUrl("http://localhost:9200") // docker service name
+                .baseUrl(elasticUrl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }

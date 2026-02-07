@@ -2,6 +2,7 @@ package com.paperless.config;
 
 import org.springframework.stereotype.Service;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class KafkaProducer {
