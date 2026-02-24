@@ -6,6 +6,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY app.jar app.jar
+COPY target/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
